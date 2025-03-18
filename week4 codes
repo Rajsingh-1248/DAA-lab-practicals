@@ -1,0 +1,111 @@
+#include <stdio.h>
+
+// Global variables to count comparisons and swaps
+int comparisons = 0, swaps = 0;
+
+// Function to swap two elements and count swaps
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+    swaps++; // Count swap
+}
+
+// Partition function (Lomuto's method)
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high]; // Choosing the last element as pivot
+    int i = low - 1; // Pointer for smaller element
+
+    for (int j = low; j < high; j++) {
+        comparisons++; // Every comparison with pivot
+        if (arr[j] < pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]); // Swap pivot to correct position
+    return i + 1;
+}
+
+// Quick Sort function
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+// Driver function
+int main() {
+    int arr[] = {9, 5, 1, 4, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    quickSort(arr, 0, n - 1);
+
+    // Print sorted array
+    printf("Sorted Array: ");
+    for (int i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+
+    printf("\nTotal Comparisons: %d\nTotal Swaps: %d\n", comparisons, swaps);
+    return 0;
+}
+
+#include <stdio.h>
+
+// Function to swap two elements
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Partition function (Lomuto's method)
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];  
+    int i = low - 1;  
+
+    for (int j = low; j < high; j++) {
+        if (arr[j] <= pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]); 
+    return i + 1;
+}
+
+// QuickSelect function to find Kth smallest element
+int quickSelect(int arr[], int low, int high, int k) {
+    if (low <= high) {
+        int pi = partition(arr, low, high);
+
+        // If pivot position matches k-1, return element
+        if (pi == k - 1)
+            return arr[pi];
+        else if (pi > k - 1)
+            return quickSelect(arr, low, pi - 1, k);
+        else
+            return quickSelect(arr, pi + 1, high, k);
+    }
+    return -1;
+}
+
+// Function to find Kth largest element
+int findKthLargest(int arr[], int n, int k) {
+    return quickSelect(arr, 0, n - 1, n - k + 1);
+}
+
+// Driver function
+int main() {
+    int arr[] = {7, 10, 4, 3, 20, 15};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int k = 3;
+
+    printf("%dth Smallest Element: %d\n", k, quickSelect(arr, 0, n - 1, k));
+    printf("%dth Largest Element: %d\n", k, findKthLargest(arr, n, k));
+
+    return 0;
+}
